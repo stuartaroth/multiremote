@@ -1,0 +1,14 @@
+{
+  "name": "multiremote-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc --outDir ./public --module commonjs index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^3.0.1"
+  }
+}

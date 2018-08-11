@@ -1,0 +1,7 @@
+.gradle/
+.idea/
+build/
+gradle/
+out/
+src/main/resources/client/node_modules
+src/main/resources/client/public/*.js

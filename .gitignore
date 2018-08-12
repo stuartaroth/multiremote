@@ -5,3 +5,5 @@ gradle/
 out/
 src/main/resources/client/node_modules
 src/main/resources/client/public/*.js
+multiremote.iml
+.DS_Store

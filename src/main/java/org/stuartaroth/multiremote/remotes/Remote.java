@@ -1,6 +1,7 @@
 package org.stuartaroth.multiremote.remotes;
 
 public interface Remote {
+    RemoteInfo getRemoteInfo();
     void up();
     void down();
     void left();

@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.stuartaroth.multiremote.remotes.Remote;
 import org.stuartaroth.multiremote.remotes.RemoteInfo;
 import org.stuartaroth.multiremote.services.json.JsonService;
+import org.stuartaroth.multiremote.services.remote.RemoteService;
+import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -19,18 +21,27 @@ public class GetRemotesHandler implements Route {
     private static Logger logger = LoggerFactory.getLogger(GetRemotesHandler.class);
 
     private JsonService jsonService;
-    private Map<String, Remote> uniqueRemotes;
+    private RemoteService remoteService;
+
     private List<RemoteInfo> remoteInfos;
 
-    public GetRemotesHandler(JsonService jsonService, Map<String, Remote> uniqueRemotes) {
+    public GetRemotesHandler(JsonService jsonService, RemoteService remoteService) {
         this.jsonService = jsonService;
-        this.uniqueRemotes = uniqueRemotes;
+        this.remoteService = remoteService;
+        getRemotes(false);
+    }
+
+    private void getRemotes(Boolean rescan) {
+        Map<String, Remote> uniqueRemotes = remoteService.getRemotes(rescan);
+        remoteInfos = uniqueRemotes.values().stream().map(Remote::getRemoteInfo).collect(Collectors.toList());
     }
 
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        if (remoteInfos == null) {
-            remoteInfos = uniqueRemotes.values().stream().map(Remote::getRemoteInfo).collect(Collectors.toList());
+        QueryParamsMap queryParamsMap = request.queryMap();
+        String rescan = queryParamsMap.value("rescan");
+        if (rescan != null) {
+            getRemotes(true);
         }
 
         response.type(APPLICATION_JSON);

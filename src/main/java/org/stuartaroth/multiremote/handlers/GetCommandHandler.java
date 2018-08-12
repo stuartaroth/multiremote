@@ -3,6 +3,7 @@ package org.stuartaroth.multiremote.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.stuartaroth.multiremote.remotes.Remote;
+import org.stuartaroth.multiremote.services.remote.RemoteService;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
@@ -15,10 +16,12 @@ import static org.stuartaroth.multiremote.constants.RemoteConstants.VALID_COMMAN
 public class GetCommandHandler implements Route {
     private static Logger logger = LoggerFactory.getLogger(GetCommandHandler.class);
 
+    private RemoteService remoteService;
     private Map<String, Remote> uniqueRemotes;
 
-    public GetCommandHandler(Map<String, Remote> uniqueRemotes) {
-        this.uniqueRemotes = uniqueRemotes;
+    public GetCommandHandler(RemoteService remoteService) {
+        this.remoteService = remoteService;
+        this.uniqueRemotes = remoteService.getRemotes();
     }
 
     @Override
@@ -88,6 +91,7 @@ public class GetCommandHandler implements Route {
             response.status(204);
             return "";
         } catch (Exception e) {
+            logger.error("exception: {}", e);
             response.status(500);
             return "Something went wrong";
         }

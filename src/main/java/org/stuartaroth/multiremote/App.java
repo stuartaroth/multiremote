@@ -11,6 +11,8 @@ import org.stuartaroth.multiremote.services.config.DefaultConfigService;
 import org.stuartaroth.multiremote.services.http.*;
 import org.stuartaroth.multiremote.services.json.GsonJsonService;
 import org.stuartaroth.multiremote.services.json.JsonService;
+import org.stuartaroth.multiremote.services.remote.DefaultRemoteService;
+import org.stuartaroth.multiremote.services.remote.RemoteService;
 import spark.Route;
 
 import java.util.Arrays;
@@ -28,20 +30,12 @@ public class App {
 
         JsonService jsonService = new GsonJsonService();
         HttpService httpService = new ApacheHttpService();
-
-        List<Remote> remotes = Arrays.asList(
-                new RokuRemote(httpService)
-        );
-
-        Map<String, Remote> uniqueRemotes = remotes.stream().collect(Collectors.toMap(
-                remote -> remote.getRemoteInfo().getKey(),
-                remote -> remote
-        ));
+        RemoteService remoteService = new DefaultRemoteService(httpService);
 
         port(configService.getHttpPort());
 
-        Route getRemotesHandler = new GetRemotesHandler(jsonService, uniqueRemotes);
-        Route getCommandHandler = new GetCommandHandler(uniqueRemotes);
+        Route getRemotesHandler = new GetRemotesHandler(jsonService, remoteService);
+        Route getCommandHandler = new GetCommandHandler(remoteService);
 
         staticFiles.location("/client/public");
         get("/api/remotes", getRemotesHandler);

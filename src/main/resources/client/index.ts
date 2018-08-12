@@ -140,11 +140,16 @@ class NotificationService implements INotificationService {
 }
 
 interface IRedirectService {
-    redirect(url: string, notify: string): void;
+    redirect(url: string): void;
+    redirectWithNotification(url: string, notify: string): void;
 }
 
 class RedirectService implements IRedirectService {
-    redirect(url: string, notifyMessage: string): void {
+    redirect(url: string): void {
+        window.location.href = url;
+    }
+
+    redirectWithNotification(url: string, notifyMessage: string): void {
         window.location.href = url + `?notify=${notifyMessage}`;
     }
 }
@@ -261,7 +266,13 @@ if (queryMap["notify"]) {
     notificationService.notify(notifyMessage);
 }
 
-httpService.get("api/remotes", (httpResponse: IHttpResponse) => {
+var remotesUrl = "api/remotes";
+
+if (queryMap["rescan"]) {
+    remotesUrl += "?rescan=true";
+}
+
+httpService.get(remotesUrl, (httpResponse: IHttpResponse) => {
     if (httpResponse.body) {
         remoteInfos = jsonService.readJson(httpResponse.body, []);
 
@@ -275,7 +286,7 @@ httpService.get("api/remotes", (httpResponse: IHttpResponse) => {
         } else {
             var remoteValues = queryMap["remote"];
             if (remoteValues == null || remoteValues.length == 0) {
-                redirectService.redirect("/", "You must provide a 'remote' query param");
+                redirectService.redirectWithNotification("/", "You must provide a 'remote' query param");
                 return;
             }
 
@@ -283,7 +294,7 @@ httpService.get("api/remotes", (httpResponse: IHttpResponse) => {
 
             var validRemoteValues: string[] = remoteInfos.map((remoteInfo: IRemoteInfo) => remoteInfo.key);
             if (validRemoteValues.indexOf(remoteValue) == -1) {
-                redirectService.redirect("/", "You must provide a valid 'remote' query param");
+                redirectService.redirectWithNotification("/", "You must provide a valid 'remote' query param");
                 return;
             }
 

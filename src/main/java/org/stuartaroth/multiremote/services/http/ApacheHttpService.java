@@ -1,5 +1,6 @@
 package org.stuartaroth.multiremote.services.http;
 
+import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -52,7 +53,12 @@ public class ApacheHttpService implements HttpService {
         );
 
         Integer statusCode = apacheHttpResponse.getStatusLine().getStatusCode();
-        String contentType = apacheHttpResponse.getFirstHeader(CONTENT_TYPE).getValue();
+        Header contentTypeHeader = apacheHttpResponse.getFirstHeader(CONTENT_TYPE);
+        String contentType = null;
+        if (contentTypeHeader != null) {
+            contentType = contentTypeHeader.getValue();
+        }
+
         String body = bufferedReader.lines().collect(Collectors.joining());
         Map<String, String> headers = new HashMap<>();
 

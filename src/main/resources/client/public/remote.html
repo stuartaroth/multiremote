@@ -4,7 +4,38 @@
     <meta charset="UTF-8">
     <title>remote</title>
     <script src="index.js"></script>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <div class="remote-row">
+        <div onclick="remoteCommandService.back()">Back</div>
+        <div onclick="remoteCommandService.info()">Info</div>
+        <div onclick="remoteCommandService.home()">Home</div>
+    </div>
+    <div class="remote-row">
+        <div></div>
+        <div onclick="remoteCommandService.up()">Up</div>
+        <div></div>
+    </div>
+    <div class="remote-row">
+        <div onclick="remoteCommandService.left()">Left</div>
+        <div onclick="remoteCommandService.enter()">Enter</div>
+        <div onclick="remoteCommandService.right()">Right</div>
+    </div>
+    <div class="remote-row">
+        <div></div>
+        <div onclick="remoteCommandService.down()">Down</div>
+        <div></div>
+    </div>
+    <div class="remote-row">
+        <div onclick="remoteCommandService.rewind()">Rewind</div>
+        <div onclick="remoteCommandService.playpause()">Play/Pause</div>
+        <div onclick="remoteCommandService.forward()">Forward</div>
+    </div>
+    <div class="remote-row">
+        <div onclick="remoteCommandService.mute()">Mute</div>
+        <div onclick="remoteCommandService.volumeDown()">Volume Down</div>
+        <div onclick="remoteCommandService.volumeUp()">Volume Up</div>
+    </div>
 </body>
 </html>

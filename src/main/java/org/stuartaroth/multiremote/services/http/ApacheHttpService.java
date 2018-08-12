@@ -2,7 +2,10 @@ package org.stuartaroth.multiremote.services.http;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -13,6 +16,8 @@ import java.util.stream.Collectors;
 import static org.stuartaroth.multiremote.constants.HttpConstants.*;
 
 public class ApacheHttpService implements HttpService {
+    private static Logger logger = LoggerFactory.getLogger(ApacheHttpService.class);
+
     private HttpClient httpClient;
 
     public ApacheHttpService() {
@@ -28,6 +33,9 @@ public class ApacheHttpService implements HttpService {
         switch (httpRequest.getMethod().toUpperCase()) {
             case GET:
                 apacheHttpRequest = new HttpGet(url);
+                break;
+            case POST:
+                apacheHttpRequest = new HttpPost(url);
                 break;
             default:
                 throw new Exception("Unrecognized HTTP method");

@@ -128,26 +128,166 @@ class HtmlService implements IHtmlService {
     }
 }
 
+interface INotificationService {
+    notify(message: string): void;
+}
+
+class NotificationService implements INotificationService {
+    notify(message: string): void {
+        //todo change to a better system than alerts
+        alert(message);
+    }
+}
+
+interface IRedirectService {
+    redirect(url: string, notify: string): void;
+}
+
+class RedirectService implements IRedirectService {
+    redirect(url: string, notifyMessage: string): void {
+        window.location.href = url + `?notify=${notifyMessage}`;
+    }
+}
+
+interface IRemoteCommandService {
+    setRemoteKey(key: string): void;
+    back(): void;
+    info(): void;
+    home(): void;
+    up(): void;
+    left(): void;
+    enter(): void;
+    right(): void;
+    down(): void;
+    rewind(): void;
+    playpause(): void;
+    forward(): void;
+    mute(): void;
+    volumeDown(): void;
+    volumeUp(): void;
+}
+
+class RemoteCommandService implements IRemoteCommandService {
+    private httpService: IHttpService;
+    private remoteKey: string;
+
+    constructor(httpService: IHttpService) {
+        this.httpService = httpService;
+    }
+
+    setRemoteKey(key: string): void {
+        this.remoteKey = key;
+    }
+
+    private sendCommand(command: string) {
+        httpService.get(`api/command?remote=${remoteKey}&command=${command}`, (httpResponse: IHttpResponse) => {
+            console.log("sendCommand", remoteKey, command, httpResponse);
+        });
+    }
+
+    back(): void {
+        this.sendCommand("back");
+    }
+
+    down(): void {
+        this.sendCommand("down");
+    }
+
+    enter(): void {
+        this.sendCommand("enter");
+    }
+
+    forward(): void {
+        this.sendCommand("forward");
+    }
+
+    home(): void {
+        this.sendCommand("home");
+    }
+
+    info(): void {
+        this.sendCommand("info");
+    }
+
+    left(): void {
+        this.sendCommand("left");
+    }
+
+    mute(): void {
+        this.sendCommand("mute");
+    }
+
+    playpause(): void {
+        this.sendCommand("playpause");
+    }
+
+    rewind(): void {
+        this.sendCommand("rewind");
+    }
+
+    right(): void {
+        this.sendCommand("right");
+    }
+
+    up(): void {
+        this.sendCommand("up");
+    }
+
+    volumeDown(): void {
+        this.sendCommand("volumeDown");
+    }
+
+    volumeUp(): void {
+        this.sendCommand("volumeUp");
+    }
+}
+
 var urlService: IUrlService = new UrlService();
 var httpService: IHttpService = new HttpService();
 var jsonService: IJsonService = new JsonService();
 var htmlService: IHtmlService = new HtmlService();
+var notificationService: INotificationService = new NotificationService();
+var redirectService: IRedirectService = new RedirectService();
+var remoteCommandService: IRemoteCommandService = new RemoteCommandService(httpService);
 
 var remoteInfos: IRemoteInfo[] = [];
+var remoteKey: string = "";
 
-if (!urlService.isRemotePage()) {
-    httpService.get("api/remotes", (httpResponse: IHttpResponse) => {
-        if (httpResponse.body) {
-            remoteInfos = jsonService.readJson(httpResponse.body, []);
+var queryMap: { [key: string]: string[] } = urlService.getQueryMap();
+
+if (queryMap["notify"]) {
+    var notifyValues = queryMap["notify"];
+    var notifyMessage = decodeURIComponent(notifyValues[0]);
+    notificationService.notify(notifyMessage);
+}
+
+httpService.get("api/remotes", (httpResponse: IHttpResponse) => {
+    if (httpResponse.body) {
+        remoteInfos = jsonService.readJson(httpResponse.body, []);
+
+        if (!urlService.isRemotePage()) {
             var element = document.getElementById("remotes");
             if (element != null) {
                 var htmlStrings: string[] = remoteInfos.map(htmlService.getIRemoteInfoHtml);
                 element.innerHTML = htmlStrings.join("");
+                return;
             }
-        }
-    });
-}
+        } else {
+            var remoteValues = queryMap["remote"];
+            if (remoteValues == null || remoteValues.length == 0) {
+                redirectService.redirect("/", "You must provide a 'remote' query param");
+                return;
+            }
 
-if (urlService.isRemotePage()) {
-    
-}
+            var remoteValue = remoteValues[0];
+
+            var validRemoteValues: string[] = remoteInfos.map((remoteInfo: IRemoteInfo) => remoteInfo.key);
+            if (validRemoteValues.indexOf(remoteValue) == -1) {
+                redirectService.redirect("/", "You must provide a valid 'remote' query param");
+                return;
+            }
+
+            remoteKey = remoteValue;
+        }
+    }
+});

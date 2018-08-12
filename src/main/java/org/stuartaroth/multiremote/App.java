@@ -1,9 +1,11 @@
 package org.stuartaroth.multiremote;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.stuartaroth.multiremote.handlers.GetCommandHandler;
 import org.stuartaroth.multiremote.handlers.GetRemotesHandler;
 import org.stuartaroth.multiremote.remotes.Remote;
-import org.stuartaroth.multiremote.remotes.RokuRemote;
+import org.stuartaroth.multiremote.remotes.roku.RokuRemote;
 import org.stuartaroth.multiremote.services.config.ConfigService;
 import org.stuartaroth.multiremote.services.config.DefaultConfigService;
 import org.stuartaroth.multiremote.services.http.*;
@@ -13,12 +15,15 @@ import spark.Route;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static spark.Spark.*;
 
 public class App {
-    public static void main(String[] args) throws Exception {
+    private static Logger logger = LoggerFactory.getLogger(App.class);
 
+    public static void main(String[] args) throws Exception {
         ConfigService configService = new DefaultConfigService();
 
         JsonService jsonService = new GsonJsonService();
@@ -28,11 +33,18 @@ public class App {
                 new RokuRemote(httpService)
         );
 
+        Map<String, Remote> uniqueRemotes = remotes.stream().collect(Collectors.toMap(
+                remote -> remote.getRemoteInfo().getKey(),
+                remote -> remote
+        ));
+
         port(configService.getHttpPort());
 
-        Route getRemotesHandler = new GetRemotesHandler(jsonService, remotes);
+        Route getRemotesHandler = new GetRemotesHandler(jsonService, uniqueRemotes);
+        Route getCommandHandler = new GetCommandHandler(uniqueRemotes);
 
         staticFiles.location("/client/public");
         get("/api/remotes", getRemotesHandler);
+        get("/api/command", getCommandHandler);
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class RemoteConstants {
     public static final String ROKU_KEY = "roku";
-    public static final String ROKU_DISPLAY_NAME = "Roku";
+    public static final String ROKU_DISPLAY_NAME = "Roku Remote";
     public static final List<String> VALID_COMMANDS = Arrays.asList(
             "back",
             "info",

@@ -1,5 +1,3 @@
-.remote-row div {
-    display: inline-block;
-    width: 100px;
-    height: 30px;
+.remote-empty {
+    visibility: hidden;
 }

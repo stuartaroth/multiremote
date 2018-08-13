@@ -293,12 +293,18 @@ httpService.get(remotesUrl, (httpResponse: IHttpResponse) => {
             var remoteValue = remoteValues[0];
 
             var validRemoteValues: string[] = remoteInfos.map((remoteInfo: IRemoteInfo) => remoteInfo.key);
-            if (validRemoteValues.indexOf(remoteValue) == -1) {
+            var validRemoteValuesIndex: number = validRemoteValues.indexOf(remoteValue);
+            if (validRemoteValuesIndex) {
                 redirectService.redirectWithNotification("/", "You must provide a valid 'remote' query param");
                 return;
             }
 
-            remoteKey = remoteValue;
+            var remoteInfo: IRemoteInfo = remoteInfos[validRemoteValuesIndex];
+
+            remoteKey = remoteInfo.key;
+
+            document.title = remoteInfo.displayName;
+            document.getElementById("message-title").innerText = remoteInfo.displayName;
         }
     }
 });

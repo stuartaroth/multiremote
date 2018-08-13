@@ -9,10 +9,20 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <h3>
-        multiremote
-    </h3>
-    <div id="remotes"></div>
-    <div onclick="redirectService.redirect('/?rescan=true')">Rescan</div>
+    <div class="message">
+        <div class="message-header">
+            <div id="message-title">multiremote</div>
+        </div>
+        <div class="message-body">
+            <div class="columns">
+                <div class="column">
+                    <div id="remotes"></div>
+                </div>
+                <div class="column">
+                    <a href="/?rescan=true">Rescan</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

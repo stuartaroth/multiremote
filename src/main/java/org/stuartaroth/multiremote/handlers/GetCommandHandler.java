@@ -17,16 +17,16 @@ public class GetCommandHandler implements Route {
     private static Logger logger = LoggerFactory.getLogger(GetCommandHandler.class);
 
     private RemoteService remoteService;
-    private Map<String, Remote> uniqueRemotes;
 
     public GetCommandHandler(RemoteService remoteService) {
         this.remoteService = remoteService;
-        this.uniqueRemotes = remoteService.getRemotes();
     }
 
     @Override
     public Object handle(Request request, Response response) throws Exception {
         try {
+            Map<String, Remote> uniqueRemotes = remoteService.getRemotes();
+
             QueryParamsMap queryParamsMap = request.queryMap();
             String remoteKey = queryParamsMap.value("remote");
             String command = queryParamsMap.value("command");

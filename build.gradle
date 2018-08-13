@@ -6,6 +6,27 @@ plugins {
 group 'org.stuartaroth'
 mainClassName = 'org.stuartaroth.multiremote.App'
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.stuartaroth.multiremote.App'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    sourceSets {
+        main {
+            resources {
+                exclude 'client/node_modules'
+                exclude 'client/index.ts'
+                exclude 'client/package.json'
+                exclude 'client/package-lock.json'
+            }
+        }
+    }
+}
+
 sourceCompatibility = 1.8
 
 repositories {

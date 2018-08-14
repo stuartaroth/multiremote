@@ -21,4 +21,6 @@ public interface Remote {
     void mute() throws Exception;
     void volumeDown() throws Exception;
     void volumeUp() throws Exception;
+
+    void sendText(String text) throws Exception;
 }

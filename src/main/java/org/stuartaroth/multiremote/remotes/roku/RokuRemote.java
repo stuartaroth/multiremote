@@ -11,6 +11,10 @@ import org.stuartaroth.multiremote.services.http.DefaultHttpRequest;
 import org.stuartaroth.multiremote.services.http.HttpRequest;
 import org.stuartaroth.multiremote.services.http.HttpService;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class RokuRemote implements Remote {
     private static Logger logger = LoggerFactory.getLogger(RokuRemote.class);
 
@@ -102,5 +106,19 @@ public class RokuRemote implements Remote {
     @Override
     public void volumeUp() throws Exception {
         makeRequest("VolumeUp");
+    }
+
+    private String getRequestCharacter(String character) {
+        return "Lit_" + character;
+    }
+
+    @Override
+    public void sendText(String text) throws Exception {
+        String sanitized = text.replace(" ", "+");
+        List<String> characters = Arrays.asList(sanitized.split(""));
+        List<String> requestCharacters = characters.stream().map(this::getRequestCharacter).collect(Collectors.toList());
+        for (String requestCharacter : requestCharacters) {
+            makeRequest(requestCharacter);
+        }
     }
 }

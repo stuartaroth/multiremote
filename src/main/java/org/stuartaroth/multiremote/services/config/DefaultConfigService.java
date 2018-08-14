@@ -8,6 +8,29 @@ public class DefaultConfigService implements ConfigService {
 
     @Override
     public Integer getHttpPort() {
+        try {
+            String httpPort = System.getenv("MULTIREMOTE_HTTP_PORT");
+            if (httpPort != null) {
+                return Integer.valueOf(httpPort);
+            }
+        } catch (Exception e) {
+            logger.error("Error parsing 'MULTIREMOTE_HTTP_PORT': {}", e);
+        }
+
         return 8834;
+    }
+
+    @Override
+    public Boolean isDebugMode() {
+        try {
+            String debug = System.getenv("MULTIREMOTE_DEBUG");
+            if (debug != null && debug.toLowerCase().equals("true")) {
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error("Error parsing 'MULTIREMOTE_DEBUG': {}", e);
+        }
+
+        return false;
     }
 }

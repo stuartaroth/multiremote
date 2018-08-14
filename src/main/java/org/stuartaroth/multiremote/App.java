@@ -22,9 +22,13 @@ public class App {
         try {
             ConfigService configService = new DefaultConfigService();
 
+            if (configService.isDebugMode()) {
+                logger.info("starting `multiremote` in debug mode...");
+            }
+
             JsonService jsonService = new GsonJsonService();
             HttpService httpService = new ApacheHttpService();
-            RemoteService remoteService = new DefaultRemoteService(httpService);
+            RemoteService remoteService = new DefaultRemoteService(configService, httpService);
 
             port(configService.getHttpPort());
 

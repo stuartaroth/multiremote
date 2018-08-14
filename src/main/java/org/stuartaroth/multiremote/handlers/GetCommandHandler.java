@@ -30,6 +30,11 @@ public class GetCommandHandler implements Route {
             QueryParamsMap queryParamsMap = request.queryMap();
             String remoteKey = queryParamsMap.value("remote");
             String command = queryParamsMap.value("command");
+            String text = queryParamsMap.value("text");
+
+            if (text == null) {
+                text = "";
+            }
 
             if (remoteKey == null || !uniqueRemotes.containsKey(remoteKey)) {
                 response.status(422);
@@ -85,6 +90,9 @@ public class GetCommandHandler implements Route {
                     break;
                 case "volumeUp":
                     remote.volumeUp();
+                    break;
+                case "sendText":
+                    remote.sendText(text);
                     break;
             }
 

@@ -15,37 +15,43 @@
         </div>
         <div class="message-body">
             <div class="columns">
-                <div class="column">
+                <div class="column is-two-thirds">
                     <div class="remote">
                         <div class="columns">
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.back()">Back</a></div>
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.info()">Info</a></div>
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.home()">Home</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.back()">Back</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.info()">Info</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.home()">Home</a></div>
                         </div>
                         <div class="columns">
-                            <div class="column remote-empty"><a class="button is-large is-fullwidth is-disabled">-</a></div>
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.up()">Up</a></div>
-                            <div class="column remote-empty"><a class="button is-large is-fullwidth is-disabled">-</a></div>
+                            <div class="column remote-empty"><a class="button is-fullwidth is-disabled">-</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.up()">Up</a></div>
+                            <div class="column remote-empty"><a class="button is-fullwidth is-disabled">-</a></div>
                         </div>
                         <div class="columns">
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.left()">Left</a></div>
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.enter()">Enter</a></div>
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.right()">Right</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.left()">Left</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.enter()">Enter</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.right()">Right</a></div>
                         </div>
                         <div class="columns">
-                            <div class="column remote-empty"><a class="button is-large is-fullwidth is-disabled">-</a></div>
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.down()">Down</a></div>
-                            <div class="column remote-empty"><a class="button is-large is-fullwidth is-disabled">-</a></div>
+                            <div class="column remote-empty"><a class="button is-fullwidth is-disabled">-</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.down()">Down</a></div>
+                            <div class="column remote-empty"><a class="button is-fullwidth is-disabled">-</a></div>
                         </div>
                         <div class="columns">
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.rewind()">Rewind</a></div>
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.playpause()">Play/Pause</a></div>
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.forward()">Forward</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.rewind()">Rewind</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.playpause()">Play/Pause</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.forward()">Forward</a></div>
                         </div>
                         <div class="columns">
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.mute()">Mute</a></div>
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.volumeDown()">Volume Down</a></div>
-                            <div class="column"><a class="button is-large is-fullwidth" onclick="remoteCommandService.volumeUp()">Volume Up</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.mute()">Mute</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.volumeDown()">Volume Down</a></div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.volumeUp()">Volume Up</a></div>
+                        </div>
+                        <div class="columns">
+                            <div class="column is-two-thirds">
+                                <input class="input" type="text" placeholder="Text input" id="send-text">
+                            </div>
+                            <div class="column"><a class="button is-fullwidth" onclick="remoteCommandService.sendText()">Send Text</a></div>
                         </div>
                     </div>
                 </div>

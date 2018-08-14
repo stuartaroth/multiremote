@@ -1,5 +1,8 @@
 package org.stuartaroth.multiremote.remotes.roku;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -8,6 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RokuDiscoveryService {
+    private static Logger logger = LoggerFactory.getLogger(RokuDiscoveryService.class);
+
     // todo discovery needs to be made more error proof
 
     private Pattern addressRegex;
@@ -18,6 +23,9 @@ public class RokuDiscoveryService {
 
     public String getRokuAddress() throws Exception {
         String receiveBody = getReceiveBody();
+
+        logger.info("receiveBody: {}", receiveBody);
+
         Matcher matcher = addressRegex.matcher(receiveBody);
         boolean matchFound = matcher.find();
         if (!matchFound) {

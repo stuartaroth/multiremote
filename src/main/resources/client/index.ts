@@ -170,6 +170,7 @@ interface IRemoteCommandService {
     mute(): void;
     volumeDown(): void;
     volumeUp(): void;
+    sendText();
 }
 
 class RemoteCommandService implements IRemoteCommandService {
@@ -184,8 +185,14 @@ class RemoteCommandService implements IRemoteCommandService {
         this.remoteKey = key;
     }
 
-    private sendCommand(command: string) {
-        httpService.get(`api/command?remote=${remoteKey}&command=${command}`, (httpResponse: IHttpResponse) => {
+    private sendCommand(command: string, text?: string) {
+        var url = `api/command?remote=${remoteKey}&command=${command}`;
+
+        if (text != null) {
+            url += `&text=${text}`;
+        }
+
+        httpService.get(url, (httpResponse: IHttpResponse) => {
             console.log("sendCommand", remoteKey, command, httpResponse);
         });
     }
@@ -245,6 +252,16 @@ class RemoteCommandService implements IRemoteCommandService {
     volumeUp(): void {
         this.sendCommand("volumeUp");
     }
+
+    sendText() {
+        var sendTextElement = <HTMLInputElement>document.getElementById("send-text");
+        var text = "";
+        if (sendTextElement != null) {
+            text = sendTextElement.value;
+        }
+
+        this.sendCommand("sendText", text);
+    }
 }
 
 var urlService: IUrlService = new UrlService();
@@ -294,7 +311,7 @@ httpService.get(remotesUrl, (httpResponse: IHttpResponse) => {
 
             var validRemoteValues: string[] = remoteInfos.map((remoteInfo: IRemoteInfo) => remoteInfo.key);
             var validRemoteValuesIndex: number = validRemoteValues.indexOf(remoteValue);
-            if (validRemoteValuesIndex) {
+            if (validRemoteValuesIndex == -1 && remoteValue != "debug") {
                 redirectService.redirectWithNotification("/", "You must provide a valid 'remote' query param");
                 return;
             }

@@ -11,6 +11,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class GetRemotesHandler implements Route {
 
     private void getRemotes(Boolean rescan) {
         Map<String, Remote> uniqueRemotes = remoteService.getRemotes(rescan);
-        remoteInfos = uniqueRemotes.values().stream().map(Remote::getRemoteInfo).collect(Collectors.toList());
+        remoteInfos = uniqueRemotes.values().stream().map(Remote::getRemoteInfo).sorted(Comparator.comparing(RemoteInfo::getKey)).collect(Collectors.toList());
     }
 
     @Override

@@ -19,22 +19,28 @@ public class RokuRemote implements Remote {
     private static Logger logger = LoggerFactory.getLogger(RokuRemote.class);
 
     private HttpService httpService;
-    private String rokuAddress;
+    private RokuDevice rokuDevice;
+    private RemoteInfo remoteInfo;
 
-    public RokuRemote(HttpService httpService) throws Exception {
+    public RokuRemote(HttpService httpService, RokuDevice rokuDevice) {
         this.httpService = httpService;
+        this.rokuDevice = rokuDevice;
+        this.remoteInfo = setRemoteInfo(rokuDevice);
+    }
 
-        RokuDiscoveryService rokuDiscoveryService = new RokuDiscoveryService();
-        this.rokuAddress = rokuDiscoveryService.getRokuAddress();
+    private RemoteInfo setRemoteInfo(RokuDevice rokuDevice) {
+        String key = RemoteConstants.ROKU_KEY + "-" + rokuDevice.getSerialNumber();
+        String displayName = RemoteConstants.ROKU_DISPLAY_NAME + " (" + rokuDevice.getSerialNumber() + ")";
+        return new DefaultRemoteInfo(key, displayName);
     }
 
     @Override
     public RemoteInfo getRemoteInfo() {
-        return new DefaultRemoteInfo(RemoteConstants.ROKU_KEY, RemoteConstants.ROKU_DISPLAY_NAME);
+        return remoteInfo;
     }
 
     private void makeRequest(String command) throws Exception {
-        HttpRequest httpRequest = new DefaultHttpRequest().setMethod(HttpConstants.POST).setUrl(rokuAddress + "keypress/" + command);
+        HttpRequest httpRequest = new DefaultHttpRequest().setMethod(HttpConstants.POST).setUrl(rokuDevice.getAddress() + "keypress/" + command);
         httpService.makeRequest(httpRequest);
     }
 

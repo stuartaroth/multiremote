@@ -4,13 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.stuartaroth.multiremote.remotes.Remote;
 import org.stuartaroth.multiremote.remotes.debug.DebugRemote;
+import org.stuartaroth.multiremote.remotes.roku.DefaultRokuDiscoveryService;
+import org.stuartaroth.multiremote.remotes.roku.RokuDevice;
+import org.stuartaroth.multiremote.remotes.roku.RokuDiscoveryService;
 import org.stuartaroth.multiremote.remotes.roku.RokuRemote;
 import org.stuartaroth.multiremote.services.config.ConfigService;
 import org.stuartaroth.multiremote.services.http.HttpService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
 
 public class DefaultRemoteService implements RemoteService {
     private static Logger logger = LoggerFactory.getLogger(DefaultRemoteService.class);
@@ -30,22 +33,18 @@ public class DefaultRemoteService implements RemoteService {
 
         remotes = new HashMap<>();
 
-        ExecutorService executorService = Executors.newCachedThreadPool();
-
         // DebugRemote initialization
         if (configService.isDebugMode()) {
             Remote debugRemote = new DebugRemote();
             remotes.put(debugRemote.getRemoteInfo().getKey(), debugRemote);
         }
 
-        // RokuRemote initialization
-        Callable<Remote> callableRokuRemote = () -> new RokuRemote(httpService);
-        Future<Remote> futureRokuRemote = executorService.submit(callableRokuRemote);
-        try {
-            Remote rokuRemote = futureRokuRemote.get(5, TimeUnit.SECONDS);
+        // RokuRemotes initialization
+        RokuDiscoveryService rokuDiscoveryService = new DefaultRokuDiscoveryService();
+        List<RokuDevice> rokuDevices = rokuDiscoveryService.getRokuDevices();
+        for (RokuDevice rokuDevice : rokuDevices) {
+            Remote rokuRemote = new RokuRemote(httpService, rokuDevice);
             remotes.put(rokuRemote.getRemoteInfo().getKey(), rokuRemote);
-        } catch (Exception e) {
-            logger.error("Exception creaking roku remote");
         }
 
         logger.info("found remotes: {}", remotes.keySet());

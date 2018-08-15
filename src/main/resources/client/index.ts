@@ -124,7 +124,10 @@ interface IHtmlService {
 
 class HtmlService implements IHtmlService {
     getIRemoteInfoHtml(remoteInfo: IRemoteInfo): string {
-        return `<div><a href="/remote.html?remote=${remoteInfo.key}">${remoteInfo.displayName}</a></div>`;
+        return `<div class="box">
+        <article>
+          <p class="subtitle"><a href="/remote.html?remote=${remoteInfo.key}">${remoteInfo.displayName}</a></p>
+        </article></div>`;
     }
 }
 
@@ -264,6 +267,21 @@ class RemoteCommandService implements IRemoteCommandService {
     }
 }
 
+interface IKeyStoreService {
+    get(key: string): string;
+    set(key: string, value: string): void;
+}
+
+class KeyStoreService implements IKeyStoreService {
+    get(key: string): string {
+        return localStorage.getItem(key);
+    }
+
+    set(key: string, value: string): void {
+        localStorage.setItem(key, value);
+    }
+}
+
 var urlService: IUrlService = new UrlService();
 var httpService: IHttpService = new HttpService();
 var jsonService: IJsonService = new JsonService();
@@ -271,6 +289,7 @@ var htmlService: IHtmlService = new HtmlService();
 var notificationService: INotificationService = new NotificationService();
 var redirectService: IRedirectService = new RedirectService();
 var remoteCommandService: IRemoteCommandService = new RemoteCommandService(httpService);
+var keyStoreService: IKeyStoreService = new KeyStoreService();
 
 var remoteInfos: IRemoteInfo[] = [];
 var remoteKey: string = "";
@@ -325,3 +344,7 @@ httpService.get(remotesUrl, (httpResponse: IHttpResponse) => {
         }
     }
 });
+
+function editNickname(key: string): void {
+    console.log("editNickname:", key);
+}

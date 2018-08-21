@@ -1,6 +1,6 @@
 # multiremote
 
-[Screenshot](https://i.imgur.com/BGR5w6l.png)
+![Screenshot](https://i.imgur.com/BGR5w6l.png)
 
 `multiremote` is a project that started because I lost the remote to my Roku and my phone was always dead.
 
